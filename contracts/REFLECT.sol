@@ -63,7 +63,7 @@ abstract contract REFLECT is Context, IERC20, ProxyOwnable {
         return _decimals;
     }
 
-    function totalSupply() public pure override returns (uint256) {
+    function totalSupply() public view override returns (uint256) {
         return _tTotal;
     }
 
@@ -216,8 +216,8 @@ abstract contract REFLECT is Context, IERC20, ProxyOwnable {
         return (rAmount, rTransferAmount, rFee, tTransferAmount, tFee);
     }
 
-    function _getTValues(uint256 tAmount) private pure returns (uint256, uint256) {
-        uint256 tFee = tAmount.div(100).mul(2);
+    function _getTValues(uint256 tAmount) private view returns (uint256, uint256) {
+        uint256 tFee = _calculateReflectFee(tAmount);
         uint256 tTransferAmount = tAmount.sub(tFee);
         return (tTransferAmount, tFee);
     }
@@ -278,7 +278,7 @@ abstract contract REFLECT is Context, IERC20, ProxyOwnable {
         }
     }
 
-    function _burn(address account, unt256 amount) internal virtual {
+    function _burn(address account, uint256 amount) internal virtual {
         require(account != address(0), "ERC20: burn from the zero address");
         uint256 accountBalance = _rOwned[account];
         require(accountBalance >= amount, "ERC20: burn amount exceeds balance");
@@ -288,63 +288,6 @@ abstract contract REFLECT is Context, IERC20, ProxyOwnable {
         _tTotal -= amount;
 
         emit Transfer(account, address(0), amount);
-    }
-
-    function _reflectFee(uint256 rFee, uint256 tFee) private {
-        _rTotal = _rTotal.sub(rFee);
-        _tFeeTotal = _tFeeTotal.add(tFee);
-    }
-
-    function _getValues(uint256 tAmount)
-        private
-        view
-        returns (
-            uint256,
-            uint256,
-            uint256,
-            uint256,
-            uint256
-        )
-    {
-        (uint256 tTransferAmount, uint256 tFee) = _getTValues(tAmount);
-        uint256 currentRate = _getRate();
-        (uint256 rAmount, uint256 rTransferAmount, uint256 rFee) =
-            _getRValues(tAmount, tFee, currentRate);
-        return (rAmount, rTransferAmount, rFee, tTransferAmount, tFee);
-    }
-
-    function _getTValues(uint256 tAmount)
-        private
-        view
-        returns (uint256, uint256)
-    {
-        uint256 tFee = _calculateReflectFee(tAmount);
-        uint256 tTransferAmount = tAmount.sub(tFee);
-        return (tTransferAmount, tFee);
-    }
-
-    function _getRValues(
-        uint256 tAmount,
-        uint256 tFee,
-        uint256 currentRate
-    )
-        private
-        pure
-        returns (
-            uint256,
-            uint256,
-            uint256
-        )
-    {
-        uint256 rAmount = tAmount.mul(currentRate);
-        uint256 rFee = tFee.mul(currentRate);
-        uint256 rTransferAmount = rAmount.sub(rFee);
-        return (rAmount, rTransferAmount, rFee);
-    }
-
-    function _getRate() private view returns (uint256) {
-        (uint256 rSupply, uint256 tSupply) = _getCurrentSupply();
-        return rSupply.div(tSupply);
     }
 
     function _calculateBurnAmount(uint256 amount) private view returns (uint256) {
