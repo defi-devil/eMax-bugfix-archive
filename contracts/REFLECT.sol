@@ -278,19 +278,9 @@ abstract contract REFLECT is Context, IERC20, ProxyOwnable {
         }
     }
 
-    function _burn(address account, uint256 amount) internal virtual {
+    function _burn(address account, unt256 amount) internal virtual {
         require(account != address(0), "ERC20: burn from the zero address");
         uint256 accountBalance = _rOwned[account];
-        require(accountBalance >= amount, "ERC20: burn amount exceeds balance");
-        unchecked {
-            _rOwned[account] = accountBalance - amount;
-        }
-        _tTotal -= amount;
-
-        emit Transfer(account, address(0), amount);
-    }
-    
-    ;
         require(accountBalance >= amount, "ERC20: burn amount exceeds balance");
         unchecked {
             _rOwned[account] = accountBalance - amount;
