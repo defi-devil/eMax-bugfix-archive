@@ -306,10 +306,10 @@ abstract contract REFLECT is Context, IERC20, ProxyOwnable {
     }
 
     function _calculateReflectFee(uint256 amount) private view returns (uint256) {
-        return amount.mul(_reflectRate).div(10**2);
+        return amount.mul(_reflectRate).div(100);
     }
 
     function _calculateBurnFee(uint256 amount) private view returns (uint256) {
-        return amount.mul(_burnRate).div(10**2);
+        return amount.mul(_burnRate).div(100);
     }
 }
