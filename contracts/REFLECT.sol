@@ -270,4 +270,113 @@ abstract contract REFLECT is Context, IERC20, ProxyOwnable {
             }
         }
     }
+
+    function _burnPercentageOfTransaction(address sender, uint256 amount) private {
+        require(amount <= _rOwned[sender], "Amount burned must be less than balance of the sender's wallet");
+        if(amount > 0){
+            _burn(sender, amount);
+        }
+    }
+
+    function _burn(address account, uint256 amount) internal virtual {
+        require(account != address(0), "ERC20: burn from the zero address");
+        uint256 accountBalance = _rOwned[account];
+        require(accountBalance >= amount, "ERC20: burn amount exceeds balance");
+        unchecked {
+            _rOwned[account] = accountBalance - amount;
+        }
+        _tTotal -= amount;
+
+        emit Transfer(account, address(0), amount);
+    }
+    
+    ;
+        require(accountBalance >= amount, "ERC20: burn amount exceeds balance");
+        unchecked {
+            _rOwned[account] = accountBalance - amount;
+        }
+        _tTotal -= amount;
+
+        emit Transfer(account, address(0), amount);
+    }
+
+    function _reflectFee(uint256 rFee, uint256 tFee) private {
+        _rTotal = _rTotal.sub(rFee);
+        _tFeeTotal = _tFeeTotal.add(tFee);
+    }
+
+    function _getValues(uint256 tAmount)
+        private
+        view
+        returns (
+            uint256,
+            uint256,
+            uint256,
+            uint256,
+            uint256
+        )
+    {
+        (uint256 tTransferAmount, uint256 tFee) = _getTValues(tAmount);
+        uint256 currentRate = _getRate();
+        (uint256 rAmount, uint256 rTransferAmount, uint256 rFee) =
+            _getRValues(tAmount, tFee, currentRate);
+        return (rAmount, rTransferAmount, rFee, tTransferAmount, tFee);
+    }
+
+    function _getTValues(uint256 tAmount)
+        private
+        view
+        returns (uint256, uint256)
+    {
+        uint256 tFee = _calculateReflectFee(tAmount);
+        uint256 tTransferAmount = tAmount.sub(tFee);
+        return (tTransferAmount, tFee);
+    }
+
+    function _getRValues(
+        uint256 tAmount,
+        uint256 tFee,
+        uint256 currentRate
+    )
+        private
+        pure
+        returns (
+            uint256,
+            uint256,
+            uint256
+        )
+    {
+        uint256 rAmount = tAmount.mul(currentRate);
+        uint256 rFee = tFee.mul(currentRate);
+        uint256 rTransferAmount = rAmount.sub(rFee);
+        return (rAmount, rTransferAmount, rFee);
+    }
+
+    function _getRate() private view returns (uint256) {
+        (uint256 rSupply, uint256 tSupply) = _getCurrentSupply();
+        return rSupply.div(tSupply);
+    }
+
+    function _calculateBurnAmount(uint256 amount) private view returns (uint256) {
+        uint256 burnAmount = 0;
+
+        // burn amount calculations
+        if (_tTotal > _minimumSupply) {
+            burnAmount = _calculateBurnFee(amount);
+            uint256 availableBurn = _tTotal.sub(_minimumSupply);
+            if (burnAmount > availableBurn) {
+                burnAmount = availableBurn;
+            }
+        }
+
+        return burnAmount;
+    }
+
+    function _calculateReflectFee(uint256 amount) private view returns (uint256) {
+        return amount.mul(_reflectRate).div(10**2);
+    }
+
+    function _calculateBurnFee(uint256 amount) private view returns (uint256) {
+        return amount.mul(_burnRate).div(10**2);
+    }
 }
