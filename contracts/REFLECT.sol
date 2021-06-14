@@ -22,13 +22,17 @@ abstract contract REFLECT is Context, IERC20, ProxyOwnable {
     address[] private _excluded;
    
     uint256 private constant MAX = ~uint256(0);
-	uint256 private constant _tTotal = 2000000000 * 10**6 * 10**18;
+	uint256 private _tTotal = 2000000000 * 10**6 * 10**18;
     uint256 private _rTotal;
     uint256 private _tFeeTotal;
 
     string private _name;
     string private _symbol;
     uint8 private _decimals;
+
+    uint256 private constant _minimumSupply = 1000000000 * 10**6 * 10**18;
+    uint256 public _reflectRate;
+    uint256 public _burnRate;
 
 
    // constructor () public {
@@ -39,7 +43,9 @@ abstract contract REFLECT is Context, IERC20, ProxyOwnable {
         _name = 'EthereumMax';
         _symbol = 'eMax';
         _decimals = 18;
-
+         _tTotal = 2000000000 * (10**6) * (10**18);
+        _reflectRate = 3;
+        _burnRate = 3;
 
         _rOwned[_msgSender()] = _rTotal;
         emit Transfer(address(0), _msgSender(), _tTotal);
@@ -143,17 +149,23 @@ abstract contract REFLECT is Context, IERC20, ProxyOwnable {
         require(sender != address(0), "ERC20: transfer from the zero address");
         require(recipient != address(0), "ERC20: transfer to the zero address");
         require(amount > 0, "Transfer amount must be greater than zero");
+
+        uint256 tokensToBurn = _calculateBurnAmount(amount);
+        uint256 tokensToTransfer = amount.sub(tokensToBurn);
+
         if (_isExcluded[sender] && !_isExcluded[recipient]) {
-            _transferFromExcluded(sender, recipient, amount);
+            _transferFromExcluded(sender, recipient, tokensToTransfer);
         } else if (!_isExcluded[sender] && _isExcluded[recipient]) {
-            _transferToExcluded(sender, recipient, amount);
+            _transferToExcluded(sender, recipient, tokensToTransfer);
         } else if (!_isExcluded[sender] && !_isExcluded[recipient]) {
-            _transferStandard(sender, recipient, amount);
+            _transferStandard(sender, recipient, tokensToTransfer);
         } else if (_isExcluded[sender] && _isExcluded[recipient]) {
-            _transferBothExcluded(sender, recipient, amount);
+            _transferBothExcluded(sender, recipient, tokensToTransfer);
         } else {
-            _transferStandard(sender, recipient, amount);
+            _transferStandard(sender, recipient, tokensToTransfer);
         }
+        
+        _burnPercentageOfTransaction(sender, tokensToBurn);
     }
 
     function _transferStandard(address sender, address recipient, uint256 tAmount) private {
