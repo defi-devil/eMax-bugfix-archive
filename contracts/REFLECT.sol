@@ -22,7 +22,7 @@ abstract contract REFLECT is Context, IERC20, ProxyOwnable {
     address[] private _excluded;
    
     uint256 private constant MAX = ~uint256(0);
-	uint256 private _tTotal = 2000000000 * 10**6 * 10**18;
+	uint256 private _tTotal;
     uint256 private _rTotal;
     uint256 private _tFeeTotal;
 
@@ -43,7 +43,7 @@ abstract contract REFLECT is Context, IERC20, ProxyOwnable {
         _name = 'EthereumMax';
         _symbol = 'eMax';
         _decimals = 18;
-         _tTotal = 2000000000 * (10**6) * (10**18);
+        _tTotal = 2000000000 * (10**6) * (10**18);
         _reflectRate = 3;
         _burnRate = 3;
 
