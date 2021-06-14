@@ -30,9 +30,10 @@ abstract contract REFLECT is Context, IERC20, ProxyOwnable {
     string private _symbol;
     uint8 private _decimals;
 
-    uint256 private constant _minimumSupply = 1000000000 * 10**6 * 10**18;
     uint256 public _reflectRate;
+    uint256 public _previousReflectRate;
     uint256 public _burnRate;
+    uint256 public _previousBurnRate;
 
 
    // constructor () public {
@@ -45,8 +46,11 @@ abstract contract REFLECT is Context, IERC20, ProxyOwnable {
         _decimals = 18;
         _reflectRate = 3;
         _burnRate = 3;
+        _previousBurnRate = _burnRate;
+        _previousReflectRate = _reflectRate;
 
         _rOwned[_msgSender()] = _rTotal;
+        emit Transfer(address(0), _msgSender(), _tTotal);
         emit Transfer(address(0), _msgSender(), _tTotal);
     }
 
@@ -149,7 +153,7 @@ abstract contract REFLECT is Context, IERC20, ProxyOwnable {
         require(recipient != address(0), "ERC20: transfer to the zero address");
         require(amount > 0, "Transfer amount must be greater than zero");
 
-        uint256 tokensToBurn = _calculateBurnAmount(amount);
+        uint256 tokensToBurn = _calculateBurnFee(amount);
         uint256 tokensToTransfer = amount.sub(tokensToBurn);
 
         if (_isExcluded[sender] && !_isExcluded[recipient]) {
@@ -271,37 +275,25 @@ abstract contract REFLECT is Context, IERC20, ProxyOwnable {
     }
 
     function _burnPercentageOfTransaction(address sender, uint256 amount) private {
-        require(amount <= _rOwned[sender], "Amount burned must be less than balance of the sender's wallet");
-        if(amount > 0){
-            _burn(sender, amount);
-        }
-    }
-
-    function _burn(address account, uint256 amount) internal virtual {
-        require(account != address(0), "ERC20: burn from the zero address");
-        uint256 accountBalance = _rOwned[account];
+        address burnAddress = address(0);
+        uint256 accountBalance = balanceOf(sender);
         require(accountBalance >= amount, "ERC20: burn amount exceeds balance");
-        unchecked {
-            _rOwned[account] = accountBalance - amount;
+        uint256 reflectedAmount = amount.mul(_getRate());
+        _rOwned[sender] = _rOwned[sender].sub(reflectedAmount);
+        if (_isExcluded[burnAddress]) {
+            _tOwned[sender] = _tOwned[sender].add(amount);
         }
-        // _tTotal -= amount;
-
-        emit Transfer(account, address(0), amount);
+        _burn(sender, amount, reflectedAmount);
     }
 
-    function _calculateBurnAmount(uint256 amount) private view returns (uint256) {
-        uint256 burnAmount = 0;
-
-        // burn amount calculations
-        if (_tTotal > _minimumSupply) {
-            burnAmount = _calculateBurnFee(amount);
-            uint256 availableBurn = _tTotal.sub(_minimumSupply);
-            if (burnAmount > availableBurn) {
-                burnAmount = availableBurn;
-            }
+    function _burn(address sender, uint256 tBurn, uint256 rBurn) internal virtual {
+        address burnAddress = address(0);
+        require(sender != burnAddress, "ERC20: burn from the zero address");
+        _rOwned[burnAddress] = _rOwned[burnAddress].sub(rBurn);
+        if (_isExcluded[burnAddress]) {
+            _tOwned[burnAddress] = _tOwned[burnAddress].add(tBurn);
         }
-
-        return burnAmount;
+        emit Transfer(sender, burnAddress, tBurn);
     }
 
     function _calculateReflectFee(uint256 amount) private view returns (uint256) {
