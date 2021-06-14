@@ -334,18 +334,6 @@
             "label": "_decimals",
             "type": "t_uint8",
             "src": "..\\..\\..\\..\\..\\C\\Users\\hunte\\dev\\defidevil-emax\\contracts\\REFLECT.sol:31"
-          },
-          {
-            "contract": "REFLECT",
-            "label": "_reflectRate",
-            "type": "t_uint256",
-            "src": "..\\..\\..\\..\\..\\C\\Users\\hunte\\dev\\defidevil-emax\\contracts\\REFLECT.sol:34"
-          },
-          {
-            "contract": "REFLECT",
-            "label": "_burnRate",
-            "type": "t_uint256",
-            "src": "..\\..\\..\\..\\..\\C\\Users\\hunte\\dev\\defidevil-emax\\contracts\\REFLECT.sol:35"
           }
         ],
         "types": {
