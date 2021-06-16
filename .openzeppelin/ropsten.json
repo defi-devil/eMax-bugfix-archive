@@ -14,6 +14,11 @@
       "address": "0x03eAb3f4D3fDC4a4BE572a53DA4314fe2A5A6017",
       "txHash": "0x5accb43127898482673662947e49228c5630cb71ea4a13b3580a36bfede01852",
       "kind": "transparent"
+    },
+    {
+      "address": "0x7f43bD2340D1621aAf01B97E36B3D70216cE3B96",
+      "txHash": "0x17f9d08cc42788db624d24e2ec36521f391d6a26be1a2efc61d08006d9f3f1ae",
+      "kind": "transparent"
     }
   ],
   "impls": {
@@ -214,6 +219,121 @@
             "label": "_decimals",
             "type": "t_uint8",
             "src": "REFLECT.sol:33"
+          }
+        ],
+        "types": {
+          "t_mapping(t_address,t_uint256)": {
+            "label": "mapping(address => uint256)"
+          },
+          "t_address": {
+            "label": "address"
+          },
+          "t_uint256": {
+            "label": "uint256"
+          },
+          "t_mapping(t_address,t_mapping(t_address,t_uint256))": {
+            "label": "mapping(address => mapping(address => uint256))"
+          },
+          "t_mapping(t_address,t_bool)": {
+            "label": "mapping(address => bool)"
+          },
+          "t_bool": {
+            "label": "bool"
+          },
+          "t_array(t_address)dyn_storage": {
+            "label": "address[]"
+          },
+          "t_string_storage": {
+            "label": "string"
+          },
+          "t_uint8": {
+            "label": "uint8"
+          }
+        }
+      }
+    },
+    "8de814ef7f4cf9ead2ed1cf54f0e0cb86027cf72fd3b0a9981a161eff36887f9": {
+      "address": "0xf788b63c29fb2257086c89eDf763eD7fE292f8F4",
+      "txHash": "0xef52ac9097d738488b9f8c8786f742e68e4a08914a4f3463a715fd06db554c0a",
+      "layout": {
+        "storage": [
+          {
+            "contract": "Initializable",
+            "label": "_initialized",
+            "type": "t_bool",
+            "src": "..\\@openzeppelin\\contracts\\proxy\\utils\\Initializable.sol:23"
+          },
+          {
+            "contract": "Initializable",
+            "label": "_initializing",
+            "type": "t_bool",
+            "src": "..\\@openzeppelin\\contracts\\proxy\\utils\\Initializable.sol:28"
+          },
+          {
+            "contract": "ProxyOwnable",
+            "label": "_owner",
+            "type": "t_address",
+            "src": "..\\..\\..\\..\\..\\C\\Users\\hunte\\dev\\defidevil-emax\\contracts\\ProxyOwnable.sol:20"
+          },
+          {
+            "contract": "REFLECT",
+            "label": "_rOwned",
+            "type": "t_mapping(t_address,t_uint256)",
+            "src": "..\\..\\..\\..\\..\\C\\Users\\hunte\\dev\\defidevil-emax\\contracts\\REFLECT.sol:17"
+          },
+          {
+            "contract": "REFLECT",
+            "label": "_tOwned",
+            "type": "t_mapping(t_address,t_uint256)",
+            "src": "..\\..\\..\\..\\..\\C\\Users\\hunte\\dev\\defidevil-emax\\contracts\\REFLECT.sol:18"
+          },
+          {
+            "contract": "REFLECT",
+            "label": "_allowances",
+            "type": "t_mapping(t_address,t_mapping(t_address,t_uint256))",
+            "src": "..\\..\\..\\..\\..\\C\\Users\\hunte\\dev\\defidevil-emax\\contracts\\REFLECT.sol:19"
+          },
+          {
+            "contract": "REFLECT",
+            "label": "_isExcluded",
+            "type": "t_mapping(t_address,t_bool)",
+            "src": "..\\..\\..\\..\\..\\C\\Users\\hunte\\dev\\defidevil-emax\\contracts\\REFLECT.sol:21"
+          },
+          {
+            "contract": "REFLECT",
+            "label": "_excluded",
+            "type": "t_array(t_address)dyn_storage",
+            "src": "..\\..\\..\\..\\..\\C\\Users\\hunte\\dev\\defidevil-emax\\contracts\\REFLECT.sol:22"
+          },
+          {
+            "contract": "REFLECT",
+            "label": "_rTotal",
+            "type": "t_uint256",
+            "src": "..\\..\\..\\..\\..\\C\\Users\\hunte\\dev\\defidevil-emax\\contracts\\REFLECT.sol:26"
+          },
+          {
+            "contract": "REFLECT",
+            "label": "_tFeeTotal",
+            "type": "t_uint256",
+            "src": "..\\..\\..\\..\\..\\C\\Users\\hunte\\dev\\defidevil-emax\\contracts\\REFLECT.sol:27"
+          },
+          {
+            "contract": "REFLECT",
+            "label": "_name",
+            "type": "t_string_storage",
+            "src": "..\\..\\..\\..\\..\\C\\Users\\hunte\\dev\\defidevil-emax\\contracts\\REFLECT.sol:29"
+          },
+          {
+            "contract": "REFLECT",
+            "label": "_symbol",
+            "type": "t_string_storage",
+            "src": "..\\..\\..\\..\\..\\C\\Users\\hunte\\dev\\defidevil-emax\\contracts\\REFLECT.sol:30"
+          },
+          {
+            "contract": "REFLECT",
+            "label": "_decimals",
+            "type": "t_uint8",
+            "src": "..\\..\\..\\..\\..\\C\\Users\\hunte\\dev\\defidevil-emax\\contracts\\REFLECT.sol:31"
           }
         ],
         "types": {

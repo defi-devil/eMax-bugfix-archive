@@ -12,6 +12,7 @@
   "author": "EthereumMax",
   "license": "MIT",
   "dependencies": {
+    "dotenv": "^8.2.0",
     "@openzeppelin/contracts": "^4.1.0",
     "@openzeppelin/truffle-upgrades": "^1.7.0",
     "solc": "^0.8.4",
