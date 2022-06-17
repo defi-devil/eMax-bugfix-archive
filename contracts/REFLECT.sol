@@ -22,7 +22,7 @@ abstract contract REFLECT is Context, IERC20, ProxyOwnable {
     address[] private _excluded;
    
     uint256 private constant MAX = ~uint256(0);
-	uint256 private _tTotal;
+	uint256 private constant _tTotal = 2000000000 * (10**6) * (10**18);
     uint256 private _rTotal;
     uint256 private _tFeeTotal;
 
@@ -40,10 +40,9 @@ abstract contract REFLECT is Context, IERC20, ProxyOwnable {
         ownerInitialize();
         _rTotal = (MAX - (MAX % _tTotal));
        
-        _name = 'EthereumMax';
-        _symbol = 'eMax';
+        _name = 'EthereumMaxTest';
+        _symbol = 'eMaxTest';
         _decimals = 18;
-        _tTotal = 2000000000 * (10**6) * (10**18);
         _reflectRate = 3;
         _burnRate = 3;
 
@@ -63,7 +62,7 @@ abstract contract REFLECT is Context, IERC20, ProxyOwnable {
         return _decimals;
     }
 
-    function totalSupply() public view override returns (uint256) {
+    function totalSupply() public pure override returns (uint256) {
         return _tTotal;
     }
 
@@ -285,7 +284,7 @@ abstract contract REFLECT is Context, IERC20, ProxyOwnable {
         unchecked {
             _rOwned[account] = accountBalance - amount;
         }
-        _tTotal -= amount;
+        // _tTotal -= amount;
 
         emit Transfer(account, address(0), amount);
     }
